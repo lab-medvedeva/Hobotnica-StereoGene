@@ -1,0 +1,452 @@
+setwd("/home/alexandr/PrimaryProstate/200K/results/backgrounds/")
+
+tissure1 <-'Tumor'
+tissure2 <- 'Normal'
+
+
+for (i in 294:312) {
+     for (j in (i+1):313){
+         filename1 <- paste("SRR7187", i, "~SRR7187", j, ".bkg", sep="")
+         varname <- paste("bkg", i, j, sep="_")
+         assign(varname, read.table(file = filename1))
+
+     }
+}
+
+setwd("/home/alexandr/PrimaryProstate/200K/results/foregrounds/")
+
+
+for (i in 294:312) {
+     for (j in (i+1):313){
+         filename1 <- paste("SRR7187", i, "~SRR7187", j, ".fg", sep="")
+         varname <- paste("fg", i, j, sep="_")
+         assign(varname, read.table(file = filename1, col.names = c("chrom", "start", "end", varname)))
+     }
+}
+for (i in 294:312) {
+
+     for (j in (i+1):313){
+     	 
+         varname <- paste("bkg", i, j, sep="_")
+         backgr <- get(varname)
+         varname <- paste("fg", i, j, sep="_")
+         foregr <- get(varname)
+         vals <- unique(backgr)
+         n <- nrow(backgr)
+         y <- cumsum(tabulate(match(backgr$V1, vals$V1)))/n
+	if(length(vals$V1)==length(y)){
+	rval <- approxfun(vals$V1,y,
+                   method = "linear", yleft = 0, yright = 1, f=1,
+                   ties = "ordered")
+	}else {
+	rval <- approxfun(vals$V1,c(0, y),
+                   method = "linear", yleft = 0, yright = 1, f=1,
+                   ties = "ordered")
+	}
+	foregr1 <-foregr
+	foregr1[, 4] <- rval(foregr[,4])
+	assign(varname, foregr1)
+         
+
+     }
+}
+
+
+library(ggplot2)             
+
+total <- merge(fg_294_296, fg_294_298, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_300, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_295, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_297, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_299, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_301, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_294_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_298, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_300, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_297, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_299, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_301, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_296_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_300, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_299, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_301, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_298_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_301, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_300_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_302_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_304_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_306_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_306_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_306_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_306_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_306_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_306_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_306_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_308_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_308_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_308_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_308_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_308_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_310_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_310_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_310_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_312_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_296, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_298, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_300, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_297, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_299, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_301, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_295_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_298, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_300, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_299, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_301, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_297_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_300, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_301, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_299_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_302, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_303, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_301_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_304, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_305, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_303_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_306, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_307, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_305_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_307_308, by=c("chrom","start", "end"))
+total <- merge(total, fg_307_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_307_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_307_309, by=c("chrom","start", "end"))
+total <- merge(total, fg_307_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_307_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_309_310, by=c("chrom","start", "end"))
+total <- merge(total, fg_309_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_309_311, by=c("chrom","start", "end"))
+total <- merge(total, fg_309_313, by=c("chrom","start", "end"))
+total <- merge(total, fg_311_312, by=c("chrom","start", "end"))
+total <- merge(total, fg_311_313, by=c("chrom","start", "end"))
+
+
+total1<-total
+total <- total[, c(-1,-2,-3)]
+
+corrs <- matrix(1, nrow=20, ncol=20)
+
+len <- nrow(total)
+wid <- ncol(total)
+j <- 1
+alp <- matrix(nrow=len)
+for(i in 1:len){
+	for(k in 1:19){
+		for(l in (k+1):20){
+		corrs[l, k] <- total[i, j]
+		corrs[k, l] <- total[i, j]
+		j <- j+1
+		}
+	
+	}
+	j <-1
+	dists <- 1-corrs
+	alpha <- Hobotnica(dists, c(1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2))
+	alp[i,1] <- alpha
+}
+
+alp_exp <- data.frame(chrom=total1$chrom, start=total1$start, end=total1$end, alp=alp)
+
+len <- nrow(total)
+classes <- c(1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2)
+permuts <-list()
+j <-0
+n <- 30
+while(j<n){
+permut <-list(sample(classes,20, replace=FALSE))
+
+if(length(intersect(permuts, permut))==0 && length(intersect(list(classes), permut))==0){
+permuts <-append(permuts,permut)
+j <- j+1
+}
+}
+alp <- matrix(nrow=len, ncol=n)
+
+corrs <- matrix(1, nrow=20, ncol=20)
+
+len <- nrow(total)
+wid <- ncol(total)
+j <- 1
+
+for(i in 1:len){
+	for(k in 1:19){
+		for(l in (k+1):20){
+		corrs[l, k] <- total[i, j]
+		corrs[k, l] <- total[i, j]
+		j <- j+1
+		}
+	
+	}
+	j <-1
+	dists <- 1-corrs
+	for(l in c(1:n)){
+	clf <- permuts[l]
+	alpha <- Hobotnica(dists, clf)
+	alp[i,l] <- alpha
+}
+}
+
+
+filname <- paste("shuffled_hobot_", tissure1,"_vs_", tissure2, "_adj", ".txt", sep="")
+write.table(alp, file=filname, sep="\t", quote=FALSE)
+
+filname <- paste("classes_", tissure1,"_vs_", tissure2, "_adj", ".txt", sep="")
+write.table(permuts, file=filname, sep="\t", quote=FALSE)
+
+len <-nrow(alp)
+p_vals <- matrix(nrow=len)
+
+for(i in 1:len){
+x <- c()
+for(j in 1:n){
+x<-c(x, alp[[i,j]])
+}
+
+x <- sort(x)
+vals <- unique(x)
+y <- cumsum(tabulate(match(x, vals)))/n
+
+if(length(vals)==length(y)){
+rval <- approxfun(vals,y,
+                   method = "linear", yleft = 0, yright = 1, f=1,
+                   ties = "ordered")
+}else {
+rval <- approxfun(vals,c(0, y),
+                   method = "linear", yleft = 0, yright = 1, f=1,
+                   ties = "ordered")
+}
+
+p_val <- 1-rval(alp_exp[i,4])
+p_vals[i, 1] <- p_val
+}
+
+alp_exp$p.vals <- p_vals
+#alp_exp <- apply(alp_exp,2,as.character)
+
+filname <- paste("hobot_with_pvals_", tissure1, "_vs_", tissure2, "_adj", ".txt", sep="")
+write.table(alp_exp, file=filname, sep="\t", quote=FALSE)
+
+alp_exp$lnp.vals <- log(1-alp_exp$p.vals)
+alp_exp$lalp <- 1-alp_exp$alp
+alp_exp1 <-alp_exp[alp_exp$alp>0.8, ]
+
+lena<-nrow(alp_exp)
+x<-c(1:lena)
+alp_exp$num <- x
+
+
+filname <- paste("all_hobotnica_vs_p_value", tissure1,"_vs_", tissure2, "_adj", ".png", sep="")
+titname <- paste("All Hobotnica vs ln(1-p-value). Groups:", tissure1,"and", tissure2, sep=" ")
+ggplot()+geom_line(aes(x=alp_exp$num, y=alp_exp$lalp, color="Hobotnica"),alpha=0.4)+geom_line(aes(x=alp_exp$num, y=alp_exp$lnp.vals,color="pval"),alpha=0.4)+
+labs(title=titname, x="coordinate", y="Hobotnica", subtitle="Corrected to background distr of StereoGene")+theme_classic()
+ggsave(file=filname, plot=last_plot())
+
+
+lena<-nrow(alp_exp1)
+x<-c(1:lena)
+alp_exp1$num <- x
+
+
+filname <- paste("high_hobotnica_vs_p_value", tissure1,"_vs_", tissure2, "_adj", ".png", sep="")
+titname <- paste("High Hobotnica vs p-value. Groups:", tissure1,"and", tissure2, sep=" ")
+ggplot()+geom_line(aes(x=alp_exp1$num, y=alp_exp1$lalp, color="Hobotnica"),alpha=0.4)+geom_line(aes(x=alp_exp1$num, y=alp_exp1$lnp.vals,color="pval"),alpha=0.4)+
+labs(title=titname, x="coordinate", y="Hobotnica", subtitle="Corrected to background distr of StereoGene")+theme_classic()
+ggsave(file=filname, plot=last_plot())
+
+group1 <- paste(tissure1, "vs", tissure1)
+group2 <- paste(tissure2, "vs", tissure1)
+group3 <- paste(tissure2, "vs", tissure2)
+len_wh <- len*ncol(total)
+which<-matrix(nrow=len_wh)
+correl <-matrix(nrow=len_wh)
+group <- matrix(nrow=wid)
+
+groups <- matrix(nrow=len_wh)
+
+i <-1
+for(k in 1:19){
+	for(l in (k+1):20){
+		if(k<11 && l<11){
+			group <-group1
+		} else if (k>10 && l>10) {
+			group <- group3
+		} else {
+			group <-group2
+		}
+		 
+		 start <- (i-1)*len
+	name <- colnames(total)[i]
+	end <- i*len
+	for(j in 1:len){
+	new_j <- start+j
+	which[new_j] <- name
+	correl[new_j] <- total[j,i]
+	groups[new_j] <- group
+		}
+	i <- i+1
+
+
+}
+}
+
+
+
+filname <- paste("distr_of_hobotnica_", tissure1,"_vs_", tissure2, "_adj", ".png", sep="")
+titname <- paste("Distribution of hobotnica. Groups:", tissure1,"and", tissure2, sep=" ")
+
+ggplot(alp_exp, aes(x=alp))+geom_histogram(color='black', fill='white', bins=40)+geom_density(alpha=0.2, fill="#FF6666")+
+labs(title=titname, x="Hobotnica", subtitle="Corrected to background distr of StereoGene")+theme_classic()
+ggsave(file=filname, plot=last_plot())
+
+
+filname <- paste("distr_of_hobotnica_", tissure1,"_vs_", tissure2, "_adj", ".png", sep="")
+titname <- paste("Distribution of hobotnica. Groups:", tissure1, "and", tissure2, sep=" ")
+ggplot(alp_exp, aes(x=alp))+geom_histogram(color='black', fill='white', bins=40)+geom_density(alpha=0.2, fill="#FF6666")+
+labs(title=titname, x="Hobotnica", subtitle="Corrected to background distr of StereoGene")+theme_classic()
+ggsave(file=filname, plot=last_plot())
+
+correlations <-data.frame(correl)
+correlations$names <- which
+correlations$group <- groups
+
+filname <- paste("distr_of_corrs_sample_to_sample_", tissure1,"_vs_", tissure2, "_adj", ".png", sep="")
+titname <- paste("Distribution of correlations sample-to-sample. Groups:", tissure1,"and", tissure2, sep=" ")
+ggplot(correlations, aes(x=correl, color=names, fill=names))+geom_histogram(bins=40, position="identity", alpha=0.2)+geom_density(alpha=0.2, fill="#FF6666")+
+labs(title=titname, x="correlation", subtitle="Corrected to background distr of StereoGene")+theme_classic()
+ggsave(file=filname, plot=last_plot())
+
+filname <- paste("distr_of_corrs_for_groups_", tissure1,"_vs_", tissure2, "_adj", ".png", sep="")
+titname <- paste("Distribution of correlations for groups. Groups:", tissure1,"and", tissure2, sep=" ")
+ggplot(correlations, aes(x=correl, color=group, fill=group))+geom_histogram(bins=40, position="identity", alpha=0.2)+geom_density(alpha=0.2, fill="#FF6666")+
+labs(title=titname, x="correlation", subtitle="Corrected to background distr of StereoGene")+theme_classic()
+ggsave(file=filname, plot=last_plot())
+
+filname <- paste("distr_o_overall_corrs_",tissure1,"_vs_", tissure2, "_adj", ".png", sep="")
+titname <- paste("Distribution of all correlations. Groups:", tissure1,"vs", tissure2, sep=" ")
+ggplot(correlations, aes(x=correl))+geom_histogram(bins=40)+geom_density(alpha=0.2, fill="#FF6666")+
+labs(title=titname, x="correlation", subtitle="Corrected to background distr of StereoGene")+theme_classic()
+ggsave(file=filname, plot=last_plot())
